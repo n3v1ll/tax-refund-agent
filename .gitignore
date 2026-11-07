@@ -1,0 +1,7 @@
+node_modules
+dist
+*.local
+.DS_Store
+# never commit real statements
+private/
+uploads/

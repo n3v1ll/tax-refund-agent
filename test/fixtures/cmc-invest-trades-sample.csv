@@ -1,0 +1,7 @@
+Trade Date,Settlement Date,Buy/Sell,Code,Security Name,Market,Quantity,Price,Consideration,Brokerage,GST,Currency,Reference
+12/02/2024,14/02/2024,Buy,VAS,Vanguard Australian Shares ETF,ASX,50,92.10,4605.00,10.00,0,AUD,C1001
+03/09/2025,05/09/2025,Buy,VAS,Vanguard Australian Shares ETF,ASX,20,101.50,2030.00,5.00,0,AUD,C1002
+18/03/2026,20/03/2026,Sell,VAS,Vanguard Australian Shares ETF,ASX,60,108.00,6480.00,10.00,0,AUD,C1003
+22/07/2025,24/07/2025,Buy,BHP,BHP Group Ltd,ASX,100,41.20,4120.00,5.00,0,AUD,C1004
+10/02/2026,12/02/2026,Sell,BHP,BHP Group Ltd,ASX,100,44.80,4480.00,5.00,0,AUD,C1005
+04/11/2025,06/11/2025,Sell,AAPL,Apple Inc,NASDAQ,5,270.00,1350.00,0,0,USD,C1006
