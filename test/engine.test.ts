@@ -201,3 +201,15 @@ describe('reported figures', () => {
     expect(fig(r, '18A')).toBe(450);
   });
 });
+
+describe('missing exchange rates', () => {
+  it('does not claim a purchase is missing when only its rate is', () => {
+    const r = computeReturn(ledger({ trades: [
+      trade({ symbol: 'VOO', side: 'buy', date: '2026-05-04', units: 2, price: 600, currency: 'USD' }),
+      trade({ symbol: 'VOO', side: 'sell', date: '2026-06-30', units: 2, price: 650, currency: 'USD' }),
+    ] }), 2026, { rates: {}, source: 'none' });
+    expect(r.issues.some((i) => i.code === 'MISSING_COST_BASE')).toBe(false);
+    expect(r.issues.some((i) => i.code === 'FX_MISSING')).toBe(true);
+    expect(r.disposals).toHaveLength(0);
+  });
+});

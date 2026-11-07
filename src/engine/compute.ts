@@ -202,8 +202,9 @@ export function computeReturn(ledgerIn: Ledger, taxYear: number, fx: FxTable, op
     for (const t of ts) {
       if (t.side === 'buy') {
         const aud = conv(t.units * t.price + t.fees, t.currency, t.date, ['18H', '18A', '18V'], `buy ${t.symbol}`, t.source);
-        if (aud === null) continue;
-        lots.push({ tradeId: t.id, date: t.date, units: t.units, unitCostAud: aud / t.units, source: t.source });
+        // Keep the parcel even without a rate, so later sales still match it;
+        // its cost is unknown (NaN) and the FX blocker stops the figures.
+        lots.push({ tradeId: t.id, date: t.date, units: t.units, unitCostAud: aud === null ? NaN : aud / t.units, source: t.source });
         continue;
       }
       const inYear = inRange(t.date, year.start, year.end);
@@ -227,7 +228,7 @@ export function computeReturn(ledgerIn: Ledger, taxYear: number, fx: FxTable, op
         });
         block(['18H', '18A', '18V'], id);
       }
-      if (proceeds !== null) disposals.push(...splitDisposal(t, picked, unitProceeds, options.parcelMethod));
+      if (proceeds !== null && picked.every((p) => Number.isFinite(p.costAud))) disposals.push(...splitDisposal(t, picked, unitProceeds, options.parcelMethod));
     }
   }
 
@@ -455,6 +456,7 @@ function pickLots(lots: Lot[], units: number, sellDate: string, unitProceeds: nu
   const avail = lots.filter((l) => l.units > 1e-9);
   if (method === 'lowest_tax') {
     const score = (l: Lot) => {
+      if (!Number.isFinite(l.unitCostAud)) return 0;
       const g = unitProceeds - l.unitCostAud;
       if (g < 0) return g; // losses first, biggest loss first
       return discountEligible(l.date, sellDate) ? g * 0.5 : g;
